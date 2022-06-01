@@ -3,15 +3,11 @@
 Test Doubles
 
 ## Overview
-In these practices, you create unit tests for a Helidon MP Application that uses oci vault sdk integration.  new Helidon MP service (or use one you already have from a previous lesson), modifying some existing classes and adding new ones to implement health checks, metrics, tracing, and logging features that are specific to your service. You also use built-in Helidon features and other products to see your changes in action.
-
-The observability lesson is divided into sections, and the observability practices follow that same pattern. You can approach the practices however you wish, but you might find it most useful to work on the practice for each observability feature immediately after going through the corresponding lesson for that feature.
-Common to All Practices in this Lesson
+In these practices, you create unit tests for a Helidon MP Application that uses oci vault sdk integration.
 
 ## Assumptions
 * JDK 11 is installed
 * IntelliJ IDEA is installed
-
 
 ## Prerequisite: 
 Download this project. Note: The one they should download should not have the src/test directory as we will have to ask them
@@ -19,7 +15,7 @@ to create this in the lesson
 
 ## Practice 1. Create Unit Test using @HelidonTest and Fake Test Double approach
 1. Open the project in IntelliJ by using `File->Open` from the menu and choose the directory of the project.
-2. Update `pom.xml` from the project root directory to add JUnit5 dependency only for `test` scope by adding this entry inside the `dependencies` clause.
+2. Open `pom.xml` from the project's root directory and update it to add JUnit5 dependency from within the `dependencies` clause.
     ```xml
     <dependency>
         <groupId>org.junit.jupiter</groupId>
@@ -158,7 +154,7 @@ to create this in the lesson
     }
     ```
 15. Run the test by using  `Run->Run CdiBeanFakeTest`  and expect all test results to be successful.
-16. Add a negative junit test method that would simulate a failure
+16. Implement a negative junit test method that would simulate a failure scenario where a non-existent secret is being retrieved.
    ```java
    @Test
    void testUnknownSecret() {
@@ -180,7 +176,7 @@ to create this in the lesson
     
 ## Practice 2. Create Unit Test using Mockito
 1. This exercise assumes that you have completed `Practice 1` as it requires some components that had already been created there. If this is not the case, please ensure that you have performed steps 1 through 5 of `Practice 1` to be able to continue.
-2. In the `pom.xml` from the project root directory, add Mockito dependency inside of the the `dependencies` clause.
+2. Open `pom.xml` from the project root directory and add Mockito dependency from within the  `dependencies` clause.
     ```
     <dependency>
         <groupId>org.mockito</groupId>
@@ -194,39 +190,23 @@ to create this in the lesson
    private final static Vaults VAULTS_CLIENT = mock(Vaults.class);
    private final static Secrets SECRETS_CLIENT = mock(Secrets.class);
    ```   
-5. Add a `@BeforeAll` JUnit annotated method called `beforeAll()` that gets invoked before all tests in the current test class.
+5. Add a `@BeforeAll` JUnit annotated method called `setUp()` that will get invoked before all tests in the current test class.
    ```java
    @BeforeAll
-   static void beforeAll() {
+   static void setUp() {
    }
    ```
-6. In the beforeAll callback method, add code to stub `Secrets.getSecretBundleByName()` using mockito's doAnswer().
-   The stubbing code will have the following sequence:
-   1. Retrieve `GetSecretBundleByNameRequest` object which is passed as a parameter from `SECRETS_CLIENT.getSecretBundleByName()
-   2. Get the secret key value from `GetSecretBundleByNameRequest`.
-   3. Use that secret key to retrieve the corresponding base64 secret value from `FakeSecretsData.secretsData` Map. 
-   4. If not found, throw a RuntimeException simulating an almost similar behaviour when encountering failure on OCI production.
-   5. Otherwise, if found, simulate a successful 200 response which includes a `SecretBundle` object containing the retrieved base64 secret value.
-   6. Code will look like below:
+6. Inside `setUp()` method, add code to stub `Vaults.createSecret()` using mockito's `when()`. The stubbing code will simply return a response that contains a 200 http code and a `Secret` object with an Id coming from `FakeSecretsData.CREATE_SECRET_ID`.
    ```java
-   doAnswer(invocationOnMock -> {
-       GetSecretBundleByNameRequest getSecretBundleByNameRequest = invocationOnMock.getArgument(0);
-       String secretKey = getSecretBundleByNameRequest.getSecretName();
-       String base64Data =  FakeSecretsData.secretsData.get(secretKey);
-       if (base64Data == null) {
-           throw new RuntimeException("Unknown secret key");
-       }
-       return GetSecretBundleByNameResponse.builder()
-               .__httpStatusCode__(200)
-               .secretBundle(
-                       SecretBundle.builder().secretBundleContent(
-                               Base64SecretBundleContentDetails.builder().content(base64Data).build()).build())
-               .build();
-   }).when(SECRETS_CLIENT).getSecretBundleByName(any());
+   when(VAULTS_CLIENT.createSecret(any())).thenReturn(
+           CreateSecretResponse.builder()
+                   .__httpStatusCode__(200)
+                   .secret(Secret.builder().id(FakeSecretsData.CREATE_SECRET_ID).build())
+                   .build());
+   
    ```
-7. Add a helper method called `getSecretsResource()` that performs the following: 
-   1. Instantiates `SecretsProvider` and passes the mocked `SECRETS_CLIENT` and `VAULTS_CLIENT` along with dummy values for vault Id, vault compartment Id and vault Key Id as parameters of the object.
-   2. Instantiates `SecretsResource` and Pass the instantiated `SecretsProvider` as an argument to the object:
+7. Add a helper method called `getSecretsResource()` that returns `SecretsResource` with instantiated `SecretsProvider` as the passed in argument. `SecretsProvider` in turn will use the mocked `SECRETS_CLIENT` and `VAULTS_CLIENT` along with dummy values for vault Id, vault compartment Id and vault Key Id as parameters.
+   2. Instantiates `SecretsResource` and Pass the instantiated `SecretsProvider` as an argument to the object.
    ```java
    private SecretsResource getSecretsResource() {
        SecretsProvider secretsProvider = new SecretsProvider(
@@ -243,19 +223,42 @@ to create this in the lesson
    }  
    ```
 9. Run the test by using  `Run->Run MockitoMockTest`  and expect test result to be successful.
-10. hh
-   ```java
-   @Test
-   void testGetUsernameAndPassword() {
-       SecretsResource secretsResource = getSecretsResource();
-       String secretKey = "username";
-       Assertions.assertEquals(FakeSecretsData.getDecodedValue(secretKey), secretsResource.getSecret(secretKey));
-       secretKey = "password";
-       Assertions.assertEquals(FakeSecretsData.getDecodedValue(secretKey), secretsResource.getSecret(secretKey));
-   }
-   ```
-11. Run the test by using  `Run->Run MockitoMockTest`  and expect all test results to be successful.
-12. hh
+10. Inside `setUp()` method, add code to stub `Secrets.getSecretBundleByName()` using mockito's `doAnswer()`. The stubbing code will have the following sequence:
+    1. Retrieve `GetSecretBundleByNameRequest` object which is passed as a parameter from `SECRETS_CLIENT.getSecretBundleByName()
+    2. Get the secret key value from `GetSecretBundleByNameRequest`.
+    3. Use that secret key to retrieve the corresponding base64 secret value from `FakeSecretsData.secretsData` Map.
+    4. If not found, throw a RuntimeException simulating an almost similar behaviour when encountering failure on OCI production.
+    5. Otherwise, if found, simulate a successful 200 response which includes a `SecretBundle` object containing the retrieved base64 secret value.
+    6. Code will finally look like below:
+       ```java
+       doAnswer(invocationOnMock -> {
+           GetSecretBundleByNameRequest getSecretBundleByNameRequest = invocationOnMock.getArgument(0);
+           String secretKey = getSecretBundleByNameRequest.getSecretName();
+           String base64Data =  FakeSecretsData.secretsData.get(secretKey);
+           if (base64Data == null) {
+               throw new RuntimeException("Unknown secret key");
+           }
+           return GetSecretBundleByNameResponse.builder()
+                   .__httpStatusCode__(200)
+                   .secretBundle(
+                           SecretBundle.builder().secretBundleContent(
+                                   Base64SecretBundleContentDetails.builder().content(base64Data).build()).build())
+                   .build();
+       }).when(SECRETS_CLIENT).getSecretBundleByName(any());
+       ```
+11. Add a junit test method that would simulate retrieving username and password secrets.
+    ```java
+    @Test
+    void testGetUsernameAndPassword() {
+        SecretsResource secretsResource = getSecretsResource();
+        String secretKey = "username";
+        Assertions.assertEquals(FakeSecretsData.getDecodedValue(secretKey), secretsResource.getSecret(secretKey));
+        secretKey = "password";
+        Assertions.assertEquals(FakeSecretsData.getDecodedValue(secretKey), secretsResource.getSecret(secretKey));
+    }
+    ```
+13. Run the test by using `Run->Run MockitoMockTest` and expect all test results to be successful.
+14. Implement a negative junit test method that would simulate a failure scenario where a non-existent secret is being retrieved.
    ```java
    @Test
    void testGetUnknownSecret() {
@@ -269,7 +272,7 @@ to create this in the lesson
        Assertions.assertTrue(callFailed, "Expecting a failure on the getSecret() call");
    }
    ```
-13. Run the test by using  `Run->Run MockitoMockTest`  and expect all test results to be successful.
+15. Run the test by using  `Run->Run MockitoMockTest`  and expect all test results to be successful.
 
 
 

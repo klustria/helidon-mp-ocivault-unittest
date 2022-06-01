@@ -20,23 +20,34 @@ import com.oracle.bmc.secrets.model.Base64SecretBundleContentDetails;
 import com.oracle.bmc.secrets.model.SecretBundle;
 import com.oracle.bmc.secrets.requests.GetSecretBundleByNameRequest;
 import com.oracle.bmc.secrets.responses.GetSecretBundleByNameResponse;
-
 import com.oracle.bmc.vault.Vaults;
 import com.oracle.bmc.vault.model.Secret;
 import com.oracle.bmc.vault.responses.CreateSecretResponse;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class MockitoMockTest {
     private final static Vaults VAULTS_CLIENT = mock(Vaults.class);
     private final static Secrets SECRETS_CLIENT = mock(Secrets.class);
 
     @BeforeAll
-    static void beforeAll() {
+    static void setUp() {
+        /*
+        Stub vaults.createSecret() and return dummy secret OCID
+         */
+        when(VAULTS_CLIENT.createSecret(any())).thenReturn(
+                CreateSecretResponse.builder()
+                        .__httpStatusCode__(200)
+                        .secret(Secret.builder().id(FakeSecretsData.CREATE_SECRET_ID).build())
+                        .build());
+
         /*
         Stub secrets.getSecretBundleByName() and return mapped value of the provided secretKey.
         Throw an exception if secretKey is not found
@@ -55,13 +66,6 @@ class MockitoMockTest {
                                     Base64SecretBundleContentDetails.builder().content(base64Data).build()).build())
                     .build();
         }).when(SECRETS_CLIENT).getSecretBundleByName(any());
-
-        // Stub vaults.createSecret() and return dummy secret OCID
-        when(VAULTS_CLIENT.createSecret(any())).thenReturn(
-                CreateSecretResponse.builder()
-                        .__httpStatusCode__(200)
-                        .secret(Secret.builder().id(FakeSecretsData.CREATE_SECRET_ID).build())
-                        .build());
     }
 
     @Test

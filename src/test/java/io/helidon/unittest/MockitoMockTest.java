@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.helidon.test.quickstart.mp;
+package io.helidon.unittest;
 
-import com.oracle.bmc.secrets.SecretsClient;
+import com.oracle.bmc.secrets.Secrets;
 import com.oracle.bmc.secrets.model.Base64SecretBundleContentDetails;
 import com.oracle.bmc.secrets.model.SecretBundle;
 import com.oracle.bmc.secrets.requests.GetSecretBundleByNameRequest;
 import com.oracle.bmc.secrets.responses.GetSecretBundleByNameResponse;
 
-import com.oracle.bmc.vault.VaultsClient;
+import com.oracle.bmc.vault.Vaults;
 import com.oracle.bmc.vault.model.Secret;
 import com.oracle.bmc.vault.responses.CreateSecretResponse;
 import org.junit.jupiter.api.Assertions;
@@ -31,9 +31,9 @@ import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-class MockitoMockingTest {
-    private final static VaultsClient vaultsClient = mock(VaultsClient.class);
-    private final static SecretsClient secretsClient = mock(SecretsClient.class);
+class MockitoMockTest {
+    private final static Vaults VAULTS_CLIENT = mock(Vaults.class);
+    private final static Secrets SECRETS_CLIENT = mock(Secrets.class);
 
     @BeforeAll
     static void beforeAll() {
@@ -54,14 +54,20 @@ class MockitoMockingTest {
                             SecretBundle.builder().secretBundleContent(
                                     Base64SecretBundleContentDetails.builder().content(base64Data).build()).build())
                     .build();
-        }).when(secretsClient).getSecretBundleByName(any());
+        }).when(SECRETS_CLIENT).getSecretBundleByName(any());
 
         // Stub vaults.createSecret() and return dummy secret OCID
-        when(vaultsClient.createSecret(any())).thenReturn(
+        when(VAULTS_CLIENT.createSecret(any())).thenReturn(
                 CreateSecretResponse.builder()
                         .__httpStatusCode__(200)
-                        .secret(Secret.builder().id(FakeSecretsData.createSecretId).build())
+                        .secret(Secret.builder().id(FakeSecretsData.CREATE_SECRET_ID).build())
                         .build());
+    }
+
+    @Test
+    void testCreateSecret() {
+        SecretsResource secretsResource = getSecretsResource();
+        Assertions.assertEquals(FakeSecretsData.CREATE_SECRET_ID, secretsResource.createSecret("NewSecret", "Value"));
     }
 
     @Test
@@ -85,15 +91,9 @@ class MockitoMockingTest {
         Assertions.assertTrue(callFailed, "Expecting a failure on the getSecret() call");
     }
 
-    @Test
-    void testCreateSecret() {
-        SecretsResource secretsResource = getSecretsResource();
-        Assertions.assertEquals(FakeSecretsData.createSecretId, secretsResource.createSecret("NewSecret", "Value"));
-    }
-
     private SecretsResource getSecretsResource() {
         SecretsProvider secretsProvider = new SecretsProvider(
-                secretsClient, vaultsClient, "vaultId", "vaultCompartmentId", "vaultKeyId");
+                SECRETS_CLIENT, VAULTS_CLIENT, "vaultId", "vaultCompartmentId", "vaultKeyId");
         return new SecretsResource(secretsProvider);
     }
 }

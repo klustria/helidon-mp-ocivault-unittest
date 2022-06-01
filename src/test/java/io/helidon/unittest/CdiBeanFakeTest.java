@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.helidon.test.quickstart.mp;
+package io.helidon.unittest;
 
 import com.oracle.bmc.Region;
 import com.oracle.bmc.secrets.Secrets;
@@ -60,19 +60,28 @@ import io.helidon.microprofile.tests.junit5.HelidonTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Priority;
-import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
 @HelidonTest
-@AddBean(CdiBeanFakingTest.FakeSecretsBean.class)
-@AddBean(CdiBeanFakingTest.FakeVaultsBean.class)
-class CdiBeanFakingTest {
+@AddBean(CdiBeanFakeTest.FakeVaultsBean.class)
+@AddBean(CdiBeanFakeTest.FakeSecretsBean.class)
+class CdiBeanFakeTest {
     @Inject
     private WebTarget webTarget;
+
+    @Test
+    void testCreateSecret() {
+        try (Response r = webTarget
+                .path("secret/NewSecretKey")
+                .request()
+                .post(Entity.text("NewSecretValue"))) {
+            Assertions.assertEquals(FakeSecretsData.CREATE_SECRET_ID, r.readEntity(String.class));
+            Assertions.assertEquals(200, r.getStatus());
+        }
+    }
 
     @Test
     void testUsernameAndPassword() {
@@ -94,34 +103,21 @@ class CdiBeanFakingTest {
     @Test
     void testUnknownSecret() {
         String secretKey = "unknown";
+        boolean callFailed = false;
         try {
             webTarget
                     .path("secret/" + secretKey)
                     .request()
                     .get(String.class);
-            Assertions.fail("Expecting a failure in this call");
         } catch (Throwable t) {
+            callFailed = true;
         }
+        Assertions.assertTrue(callFailed, "Expecting a failure on the getSecret() call");
     }
 
-    @Test
-    void testCreateSecret() {
-        try (Response r = webTarget
-                .path("secret/NewSecretKey")
-                .request()
-                .post(Entity.text("NewSecretValue"))) {
-            Assertions.assertEquals(FakeSecretsData.createSecretId, r.readEntity(String.class));
-            Assertions.assertEquals(200, r.getStatus());
-        }
-    }
-
-    @Alternative
-    @Priority(50)
     static class FakeVaultsBean implements Vaults {
         @Override
-        public void setEndpoint(String s) {
-
-        }
+        public void setEndpoint(String s) {}
 
         @Override
         public String getEndpoint() {
@@ -129,14 +125,10 @@ class CdiBeanFakingTest {
         }
 
         @Override
-        public void setRegion(Region region) {
-
-        }
+        public void setRegion(Region region) {}
 
         @Override
-        public void setRegion(String s) {
-
-        }
+        public void setRegion(String s) {}
 
         @Override
         public CancelSecretDeletionResponse cancelSecretDeletion(CancelSecretDeletionRequest cancelSecretDeletionRequest) {
@@ -157,7 +149,7 @@ class CdiBeanFakingTest {
         public CreateSecretResponse createSecret(CreateSecretRequest createSecretRequest) {
             return CreateSecretResponse.builder()
                     .__httpStatusCode__(200)
-                    .secret(Secret.builder().id(FakeSecretsData.createSecretId).build())
+                    .secret(Secret.builder().id(FakeSecretsData.CREATE_SECRET_ID).build())
                     .build();
         }
 
@@ -207,16 +199,12 @@ class CdiBeanFakingTest {
         }
 
         @Override
-        public void close() throws Exception {
-
-        }
+        public void close() throws Exception {}
     }
 
     static class FakeSecretsBean implements Secrets {
         @Override
-        public void setEndpoint(String s) {
-
-        }
+        public void setEndpoint(String s) {}
 
         @Override
         public String getEndpoint() {
@@ -224,14 +212,10 @@ class CdiBeanFakingTest {
         }
 
         @Override
-        public void setRegion(Region region) {
-
-        }
+        public void setRegion(Region region) {}
 
         @Override
-        public void setRegion(String s) {
-
-        }
+        public void setRegion(String s) {}
 
         @Override
         public GetSecretBundleResponse getSecretBundle(GetSecretBundleRequest getSecretBundleRequest) {
@@ -264,7 +248,6 @@ class CdiBeanFakingTest {
         }
 
         @Override
-        public void close() throws Exception {
-        }
+        public void close() throws Exception {}
     }
 }

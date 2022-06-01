@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.helidon.test.quickstart.mp;
+package io.helidon.unittest;
 
 import io.helidon.common.Base64Value;
 
 import java.util.Map;
 
 class FakeSecretsData {
-    static String createSecretId = "ocid1.vaultsecret.createSecretId";
+    static final String CREATE_SECRET_ID = "ocid1.vaultsecret.createSecretId";
 
     static Map<String, String> secretsData = Map.of(
             "username", Base64Value.create("Joe").toBase64(),

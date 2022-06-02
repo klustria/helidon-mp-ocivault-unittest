@@ -7,13 +7,20 @@ package() {
   rm -rf "$package_name"
 }
 
+clean() {
+  local package_name="helidon-mp-oci-unittest-$1"
+  rm -rd "$package_name".zip
+}
+
+
 # Display usage information for this tool.
 displayHelp() {
-  echo "Usage: $(basename "$0") {complete|practice|both} [start Option] "
+  echo "Usage: $(basename "$0") {complete|practice|both|clean}"
   echo
   echo "   complete   creates a complete zip distribution of the Helidon MP project which will be used as reference after the practice"
   echo "   practice   creates a zip distribution of the Helidon MP project without the test which will be used for the practice"
   echo "   both       creates both complete and practice zip distributions"
+  echo "   clean      deletes all packages"
   echo
 }
 
@@ -23,7 +30,11 @@ case "$1" in
     package "$1"
     ;;
   both)
-    package "complete" && package "practice"
+    package complete && package practice
+    ;;
+  clean)
+    clean complete
+    clean practice
     ;;
   *)
     displayHelp

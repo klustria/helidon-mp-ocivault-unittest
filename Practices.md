@@ -16,13 +16,13 @@ using the following `test double` approaches:
 1. Fake objects with `HelidonTest` - for this approach, we will be using various components of HelidonTest:
    * `@HelidonTest` - a class level annotation that will cause the test extension to start a Helidon microprofile server 
    for you, so that you do not need to manage the server lifecycle in your test.
-   * `@AddBean(Sample.class)` - a class level annotation that loads the provided class as a CDI bean in a Helidon 
+   * `@AddBean(Sample.class)` - a class level annotation that loads the provided class as a CDI bean into a Helidon 
    container and effectively replacing the production version of the bean.
    * `WebTarget` - an injectable object that can be used as the http interface to invoke the server endpoint started 
    by `@HelidonTest`
 2. Mocking/stubbing using `Mockito` - for this approach, we will rely on Mockito as a mocking framework which internally
 uses java reflection to achieve this goal. Specific to this tutorial, we will only use these Mockito components:
-   * `mock(Sample.class)` - create a mock object of a specified class or an interface that will be used by a Mockito 
+   * `mock(Sample.class)` - creates a mock object of a specified class or an interface that will be used by a Mockito 
    directive to specify the specific method to stub.
    * `when(...).thenReturn(...)` - is a directive used to return a particular hardcoded value whenever we invoke a 
    specific method on a mock object.
@@ -273,7 +273,10 @@ directly accessible from the unit test and allow stubbing directives to define t
     
 ## Practice 2. Create Unit Test using Mockito
 1. This exercise assumes that you have completed `Practice 1` as it requires some components that had already been created in that exercise. If this is not the case, ensure that you have performed steps 1 through 6 of `Practice 1` to be able to continue.
-2. Open and update `pom.xml` from the project root directory to add required dependency:
+2. Open the project in IntelliJ, if it is not currently open:
+   1. If no projects are active in the IDE, Use `Open` button from the Welcome screen and choose the directory of the project.
+   2. If other projects were previously opened in the IDE, use `File->Open` from the menu bar and choose the directory of the project.
+3. Open and update `pom.xml` from the project root directory to add required dependency:
    1. Add Mockito dependency with test scope inside the `dependencies` clause. Place it after `io.helidon.microprofile.tests:helidon-microprofile-tests-junit5` dependency declaration.
        ```
        <dependency>
@@ -283,8 +286,8 @@ directly accessible from the unit test and allow stubbing directives to define t
        </dependency>
        ```
    2. Click the Maven tool window on the right side of the IDE and choose the toolbar button with arrow cycle icon. Clicking this button will reload the Maven projects along with the newly added dependency.
-3. Create a new junit test class by highlighting the `io.heldon.unittest` (or `io/helidon/unittest` path) under `src/test/java` and use `File->New->Java Class` from the menu bar to enter `MockitoMockTest` which will then create `public class MockitoMockTest`. The class only needs visibility scope from within the package so remove the `public` keyword.
-4. Using Mockito, mock Vaults and Secrets interface. This will be used later to test create and get secret.
+4. Create a new junit test class by highlighting the `io.heldon.unittest` (or `io/helidon/unittest` path) under `src/test/java` and use `File->New->Java Class` from the menu bar to enter `MockitoMockTest` which will then create `public class MockitoMockTest`. The class only needs visibility scope from within the package so remove the `public` keyword.
+5. Using Mockito, mock Vaults and Secrets interface. This will be used later to test create and get secret.
    1. Add this code snippet right after the `class MockitoMockTest` declaration.
       ```java
       private final static Vaults VAULTS_CLIENT = mock(Vaults.class);
@@ -301,7 +304,7 @@ directly accessible from the unit test and allow stubbing directives to define t
 
          import static org.mockito.Mockito.mock;
          ```
-5. Add a `@BeforeAll` junit annotated method called `setUp()` that will get invoked before all tests in the current test class.
+6. Add a `@BeforeAll` junit annotated method called `setUp()` that will get invoked before all tests in the current test class.
    1. Insert below code snippet right after the `private final static Secrets SECRETS_CLIENT...` constant declaration:
       ```java
       @BeforeAll
@@ -334,7 +337,7 @@ directly accessible from the unit test and allow stubbing directives to define t
 
       import static org.mockito.Mockito.when;
       ```
-6. Add a helper method called `getSecretsResource()` that returns `SecretsResource` with instantiated `SecretsProvider` as the method argument. `SecretsProvider` in turn will use the mocked `SECRETS_CLIENT` and `VAULTS_CLIENT` along with dummy values for vault Id, vault compartment Id and vault Key Id as parameters. 
+7. Add a helper method called `getSecretsResource()` that returns `SecretsResource` with instantiated `SecretsProvider` as the method argument. `SecretsProvider` in turn will use the mocked `SECRETS_CLIENT` and `VAULTS_CLIENT` along with dummy values for vault Id, vault compartment Id and vault Key Id as parameters. 
    1. Place this code snippet at the very end of the `MockitoMockTest` clause.
       ```java
       private SecretsResource getSecretsResource() {
@@ -349,7 +352,7 @@ directly accessible from the unit test and allow stubbing directives to define t
 
 
       ```
-7. Now we are ready to add a junit test that would exercise create secret call. 
+8. Now we are ready to add a junit test that would exercise create secret call. 
    1. Add a junit test that instantiates `SecretsResource` via `getSecretsResource()` and calls `createSecret()` passing in any key/value pair as parameters. Place this code snippet right after the `setUp()` method:
       ```java
       @Test
@@ -368,7 +371,7 @@ directly accessible from the unit test and allow stubbing directives to define t
        1. Right-click on `MockitoMockTest` found on the `Project` window pane and choosing `Run 'MockitoMockTest'` from the drop-down menu.
        2. Click on the green arrow head on the left side of the `class MockitoMockTest` declaration and choose `Run 'MockitoMockTest'`
    5. The test will begin execution and test result should be successful once completed.
-8. Inside `setUp()` method, add code to stub `Secrets.getSecretBundleByName()` using mockito's `doAnswer()`. The stubbing code will have the following sequence:
+9. Inside `setUp()` method, add code to stub `Secrets.getSecretBundleByName()` using mockito's `doAnswer()`. The stubbing code will have the following sequence:
    1. Retrieve `GetSecretBundleByNameRequest` object which is passed as a parameter from `SECRETS_CLIENT.getSecretBundleByName()
    2. Get the secret key value from `GetSecretBundleByNameRequest`.
    3. Use that secret key to retrieve the corresponding base64 secret value from `FakeSecretsData.secretsData` Map.
@@ -401,23 +404,23 @@ directly accessible from the unit test and allow stubbing directives to define t
    
       import static method org.mockito.Mockito.doAnswer;
       ```
-9. Add a junit test method that would simulate retrieving username and password secrets. The 
-   1. Copy below code snippet and place it after `testCreateSecret()` method:
-      ```java
-      @Test
-      void testGetUsernameAndPassword() {
-          SecretsResource secretsResource = getSecretsResource();
-          String secretKey = "username";
-          Assertions.assertEquals(FakeSecretsData.getDecodedValue(secretKey), secretsResource.getSecret(secretKey));
-          secretKey = "password";
-          Assertions.assertEquals(FakeSecretsData.getDecodedValue(secretKey), secretsResource.getSecret(secretKey));
-      }
-      ```
-   2. Run the test by doing either of the following:
-       1. Right-click on `MockitoMockTest` found on the `Project` window pane and choosing `Run 'MockitoMockTest'` from the drop-down menu.
-       2. Click on the green arrow head on the left side of the `class MockitoMockTest` declaration and choose `Run 'MockitoMockTest'`
-   3. The test will begin execution and all test results should be successful once completed.
-10. Implement a negative junit test method that would simulate a failure scenario where a non-existent secret is being retrieved. The test will only succeed if the call to `secretsResource.getSecret("Unknown")` throws an exception indicating that the secret was not found.
+10. Add a junit test method that would simulate retrieving username and password secrets. The 
+    1. Copy below code snippet and place it after `testCreateSecret()` method:
+       ```java
+       @Test
+       void testGetUsernameAndPassword() {
+           SecretsResource secretsResource = getSecretsResource();
+           String secretKey = "username";
+           Assertions.assertEquals(FakeSecretsData.getDecodedValue(secretKey), secretsResource.getSecret(secretKey));
+           secretKey = "password";
+           Assertions.assertEquals(FakeSecretsData.getDecodedValue(secretKey), secretsResource.getSecret(secretKey));
+       }
+       ```
+    2. Run the test by doing either of the following:
+        1. Right-click on `MockitoMockTest` found on the `Project` window pane and choosing `Run 'MockitoMockTest'` from the drop-down menu.
+        2. Click on the green arrow head on the left side of the `class MockitoMockTest` declaration and choose `Run 'MockitoMockTest'`
+    3. The test will begin execution and all test results should be successful once completed.
+11. Implement a negative junit test method that would simulate a failure scenario where a non-existent secret is being retrieved. The test will only succeed if the call to `secretsResource.getSecret("Unknown")` throws an exception indicating that the secret was not found.
     1. Copy below code snippet and place it after `testGetUsernameAndPassword()` method:
        ```java
        @Test

@@ -73,3 +73,6 @@ user.txt
 ObjectStore/
 PutObjectStoreDirHere/
 RUNTIMEDB/
+
+# Excluded distribution files
+!helidon-mp-oci-unittest-*.zip

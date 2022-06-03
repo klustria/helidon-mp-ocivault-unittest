@@ -438,4 +438,4 @@ directly accessible from the unit test and allow stubbing directives to define t
     3. The test will begin execution and all test results should be successful once completed.
 
 ## Miscellaneous
-The distribution [helidon-mp-oci-unittest-complete.zip](helidon-mp-oci-unittest-complete.zip) contains the complete project setup that has the application source code and includes the full unit test. Used this to compare your work after you completed all the exercises.
+The distribution [helidon-mp-oci-unittest-complete.zip](helidon-mp-oci-unittest-complete.zip) contains the complete project setup that has the application source code and includes the full unit test. Used this to compare your work after you have completed all the exercises.

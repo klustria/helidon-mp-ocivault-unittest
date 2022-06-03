@@ -2,12 +2,12 @@
 
 ## Overview
 In this lab exercise, you will be presented with a project that contains the complete source code of a Helidon 
-Microprofile (MP) application that uses OCI Vault SDK integration, but does not have a unit test included. By following
-and completing the steps in all the included practices, the goal is for you to understand how to create a unit test
-that uses `test doubles`. A `test double` is a generic term used for cases where some production objects, usually
-those that represent external dependencies, are replaced with simplified versions that simulate and behave like its 
-production equivalent. By reducing complexity on those external dependencies in the form of `test doubles`, this allows
-code to be verified independently from them and at the same time, test the system's interaction with them.
+Microprofile (MP) application that uses OCI Vault SDK integration. By following and completing the steps in all the 
+included practices, the goal is for you to understand how to create a unit test that uses `test doubles`. A 
+`test double` is a generic term used for cases where some production objects, usually those that represent external 
+dependencies, are replaced with simplified versions that simulate and behave like its production equivalent. By reducing
+complexity on those external dependencies in the form of `test doubles`, this allows code to be verified independently
+from them and at the same time, test the system's interaction with them.
 
 In this project, our external dependency is the OCI Vault service interaction used for creating and retrieving secrets.
 To simplify testing, we will use `test doubles` to replace the production implementation of the OCI Vault integration 
@@ -349,8 +349,8 @@ directly accessible from the unit test and allow stubbing directives to define t
    2. Perform successive mouse cursor hovers over `SecretsResource` and `SecretsProvider` and click on `Import class`. Choose `io.helidon.ocivault.unittest` if presented with multiple choices. This will automatically generate corresponding import statements.
    3. If having difficulty with prior step, manually add these import statements (*Note: As much as possible, arrange the imports in alphabetical order and group them based on package name*):
       ```java
-
-
+      import io.helidon.unittest.SecretsProvider;
+      import io.helidon.unittest.SecretsResource;
       ```
 8. Now we are ready to add a junit test that would exercise create secret call. 
    1. Add a junit test that instantiates `SecretsResource` via `getSecretsResource()` and calls `createSecret()` passing in any key/value pair as parameters. Place this code snippet right after the `setUp()` method:
@@ -441,4 +441,4 @@ directly accessible from the unit test and allow stubbing directives to define t
     3. The test will begin execution and all test results should be successful once completed.
 
 ## Miscellaneous
-The distribution [helidon-mp-oci-unittest-complete.zip](helidon-mp-oci-unittest-complete.zip) contains the complete project setup that has the application source code and includes the full unit test. Used this to compare your work after you have completed all the exercises.
+The distribution [helidon-mp-oci-unittest-complete.zip](helidon-mp-oci-unittest-complete.zip) contains the complete project setup that has the application source code and includes the full unit test. Use this to compare your work after you have completed all the exercises.

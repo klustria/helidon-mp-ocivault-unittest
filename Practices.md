@@ -67,8 +67,8 @@ directly accessible from the unit test and allow stubbing directives to define t
        ```
    3. Click the Maven tool window on the right side of the IDE and choose the toolbar button with 2 circular arrows icon. Clicking this button will reload the Maven projects that includes the newly added dependencies. 
 4. Create the test package directory by doing the following:
-   1. Using `File->New->Directory` from the menu, select `test/java` under `Maven Source Directories` on the `New Directory` pop-up window.
-   2. From the `Project` pane, highlight the newly created `java` directory under `src/test` then use `File->New->Package` from the menu and enter `io.heldon.unittest`. Under the covers, this will create `io/helidon/unittest` directory.
+   1. Using `File->New->Directory` from the menu bar, select `test/java` under `Maven Source Directories` on the `New Directory` pop-up window.
+   2. From the `Project` pane, highlight the newly created `java` directory under `src/test` then use `File->New->Package` from the menu bar and enter `io.heldon.unittest`. Under the covers, this will create `io/helidon/unittest` directory.
 5. Create a helper class called `FakeSecretsData`. The objective of this class is to be able to provide help in performing an OCI create/get calls by being able to simulate access to secrets from memory through a local Map or String Constant, rather than from the actual OCI cloud service.
    1. From the Project tool window, highlight the newly created package `io.heldon.unittest` (or `io/helidon/unittest` path) under `src/test/java`and use `File->New->Java Class` and enter `FakeSecretsData` which will then create `public class FakeSecretsData`. The class only needs package visibility scope so remove the `public` keyword from the class declaration. 
    2. Inside the `FakeSecretsData` class, insert a `CREATE_SECRET_ID` constant just below the class declaration. This constant will represent as the OCID value of a created secret.
@@ -97,7 +97,7 @@ directly accessible from the unit test and allow stubbing directives to define t
         
          import java.util.Map;
          ```
-6. Create a new junit test class by highlighting the `io.heldon.unittest` (or `io/helidon/unittest` path) under `src/test/java` from the Project tool window and use `File->New->Java Class` from the menu and enter `CdiBeanFakeTest` which will then create `public class CdiBeanFakeTest`. The class only needs package visibility scope so remove the `public` keyword from the class declaration.
+6. Create a new junit test class by highlighting the `io.heldon.unittest` (or `io/helidon/unittest` path) under `src/test/java` from the Project tool window and use `File->New->Java Class` from the menu bar and enter `CdiBeanFakeTest` which will then create `public class CdiBeanFakeTest`. The class only needs package visibility scope so remove the `public` keyword from the class declaration.
 7. Add an inner class that simulates a `VaultsClient` performing a `createSecret()` call: 
    1. Inside the new test class, create `FakeVaultsBean` as a static class that implements `Vaults` interface. Place this code snippet at the end of the `CdiBeanFakeTest's` body
       ```java
@@ -176,7 +176,7 @@ directly accessible from the unit test and allow stubbing directives to define t
        import javax.ws.rs.core.Response;
        ```
     7. Run the test by doing either of the following:
-        1. Right-click on `CdiBeanFakeTest` found on the Project tool window and choosing `Run 'CdiBeanFakeTest'` from the pull down menu.
+        1. Right-click on `CdiBeanFakeTest` found on the Project tool window and choosing `Run 'CdiBeanFakeTest'` from the drop-down menu.
         2. Click on the right pointing green arrow head on the left side of the `class CdiBeanFakeTest` declaration and choose `Run 'CdiBeanFakeTest'`
     8. The test will begin execution and all test results should be successful once completed.
 11. Next, add an inner class that simulates a `SecretsClient` performing a `getSecretBundleByName()` call:
@@ -244,7 +244,7 @@ directly accessible from the unit test and allow stubbing directives to define t
        }
        ```
     2. Run the test by doing either of the following:
-        1. Right-click on `CdiBeanFakeTest` found on the Project window tool and choosing `Run 'CdiBeanFakeTest'` from the pull down menu.
+        1. Right-click on `CdiBeanFakeTest` found on the Project window tool and choosing `Run 'CdiBeanFakeTest'` from the drop-down menu.
         2. Click on the green arrow head on the left side of the `class CdiBeanFakeTest` declaration and choose `Run 'CdiBeanFakeTest'`
     3. The test will begin execution and all test results should be successful once completed.
 14. Our final test method will implement a negative scenario that would replicate a failure case where a non-existent secret is being retrieved.
@@ -266,14 +266,14 @@ directly accessible from the unit test and allow stubbing directives to define t
        }
        ```
     2. Run the test by doing either of the following:
-       1. Right-click on `CdiBeanFakeTest` found on the Project window tool and choosing `Run 'CdiBeanFakeTest'` from the pull down menu.
+       1. Right-click on `CdiBeanFakeTest` found on the Project window tool and choosing `Run 'CdiBeanFakeTest'` from the drop-down menu.
        2. Click on the green arrow head on the left side of the `class CdiBeanFakeTest` declaration and choose `Run 'CdiBeanFakeTest'` 
     3. The test will begin execution and all test results should be successful once completed.
 15. Congratulations! You have successfully completed this exercise.
     
 ## Practice 2. Create Unit Test using Mockito
 1. This exercise assumes that you have completed `Practice 1` as it requires some components that had already been created in that exercise. If this is not the case, ensure that you have performed steps 1 through 6 of `Practice 1` to be able to continue.
-2. Update `pom.xml` to from the project root directory to add required dependency:
+2. Open and update `pom.xml` from the project root directory to add required dependency:
    1. Add Mockito dependency with test scope inside the `dependencies` clause. Place it after `io.helidon.microprofile.tests:helidon-microprofile-tests-junit5` dependency declaration.
        ```
        <dependency>
@@ -283,7 +283,7 @@ directly accessible from the unit test and allow stubbing directives to define t
        </dependency>
        ```
    2. Click the Maven tool window on the right side of the IDE and choose the toolbar button with arrow cycle icon. Clicking this button will reload the Maven projects along with the newly added dependency.
-3. Create a new junit test class by highlighting the `io.heldon.unittest` (or `io/helidon/unittest` path) under `src/test/java` and use `File->New->Java Class` from the menu to enter `MockitoMockTest` which will then create `public class MockitoMockTest`. The class only needs visibility scope from within the package so remove the `public` keyword.
+3. Create a new junit test class by highlighting the `io.heldon.unittest` (or `io/helidon/unittest` path) under `src/test/java` and use `File->New->Java Class` from the menu bar to enter `MockitoMockTest` which will then create `public class MockitoMockTest`. The class only needs visibility scope from within the package so remove the `public` keyword.
 4. Using Mockito, mock Vaults and Secrets interface. This will be used later to test create and get secret.
    1. Add this code snippet right after the `class MockitoMockTest` declaration.
       ```java
@@ -343,11 +343,11 @@ directly accessible from the unit test and allow stubbing directives to define t
           return new SecretsResource(secretsProvider);
       }
       ```
-   2. Perform successive mouse cursor hovers over `SecretsResource` and `SecretsProvider` and click on `Import class`. Choose `io.helidon.unittest` if presented with multiple choices. This will automatically generate corresponding import statements.
+   2. Perform successive mouse cursor hovers over `SecretsResource` and `SecretsProvider` and click on `Import class`. Choose `io.helidon.ocivault.unittest` if presented with multiple choices. This will automatically generate corresponding import statements.
    3. If having difficulty with prior step, manually add these import statements (*Note: As much as possible, arrange the imports in alphabetical order and group them based on package name*):
       ```java
-      import io.helidon.unittest.SecretsProvider;
-      import io.helidon.unittest.SecretsResource;
+
+
       ```
 7. Now we are ready to add a junit test that would exercise create secret call. 
    1. Add a junit test that instantiates `SecretsResource` via `getSecretsResource()` and calls `createSecret()` passing in any key/value pair as parameters. Place this code snippet right after the `setUp()` method:
@@ -365,7 +365,7 @@ directly accessible from the unit test and allow stubbing directives to define t
       import org.junit.jupiter.api.Test;
       ```
    4. Run the test by doing either of the following:
-       1. Right-click on `MockitoMockTest` found on the `Project` window pane and choosing `Run 'MockitoMockTest'` from the pull down menu.
+       1. Right-click on `MockitoMockTest` found on the `Project` window pane and choosing `Run 'MockitoMockTest'` from the drop-down menu.
        2. Click on the green arrow head on the left side of the `class MockitoMockTest` declaration and choose `Run 'MockitoMockTest'`
    5. The test will begin execution and test result should be successful once completed.
 8. Inside `setUp()` method, add code to stub `Secrets.getSecretBundleByName()` using mockito's `doAnswer()`. The stubbing code will have the following sequence:
@@ -414,7 +414,7 @@ directly accessible from the unit test and allow stubbing directives to define t
       }
       ```
    2. Run the test by doing either of the following:
-       1. Right-click on `MockitoMockTest` found on the `Project` window pane and choosing `Run 'MockitoMockTest'` from the pull down menu.
+       1. Right-click on `MockitoMockTest` found on the `Project` window pane and choosing `Run 'MockitoMockTest'` from the drop-down menu.
        2. Click on the green arrow head on the left side of the `class MockitoMockTest` declaration and choose `Run 'MockitoMockTest'`
    3. The test will begin execution and all test results should be successful once completed.
 10. Implement a negative junit test method that would simulate a failure scenario where a non-existent secret is being retrieved. The test will only succeed if the call to `secretsResource.getSecret("Unknown")` throws an exception indicating that the secret was not found.
@@ -433,7 +433,7 @@ directly accessible from the unit test and allow stubbing directives to define t
        }
        ```
     2. Run the test by doing either of the following:
-        1. Right-click on `MockitoMockTest` found on the `Project` window pane and choosing `Run 'MockitoMockTest'` from the pull down menu.
+        1. Right-click on `MockitoMockTest` found on the `Project` window pane and choosing `Run 'MockitoMockTest'` from the drop-down menu.
         2. Click on the green arrow head on the left side of the `class MockitoMockTest` declaration and choose `Run 'MockitoMockTest'`
     3. The test will begin execution and all test results should be successful once completed.
 

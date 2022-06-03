@@ -7,7 +7,7 @@ Vault secrets data. The project will be used to demonstrate how to create a unit
 With JDK11+
 ```bash
 mvn package
-java -jar target/helidon-mp-unit-test.jar
+java -jar target/helidon-mp-ocivault-unittest.jar
 ```
 
 ## Exercise the application

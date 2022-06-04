@@ -1,17 +1,18 @@
 #!/bin/bash
 
+PACKAGE_NAME_PREFIX="helidon-mp-ocivault-unittest"
+
 package() {
-  local package_name="helidon-mp-oci-unittest-$1"
+  local package_name="$PACKAGE_NAME_PREFIX-$1"
   cp -r "$1" "$package_name"
   zip -r "$package_name".zip "$package_name"
   rm -rf "$package_name"
 }
 
 clean() {
-  local package_name="helidon-mp-oci-unittest-$1"
+  local package_name="$PACKAGE_NAME_PREFIX-$1"
   rm -rd "$package_name".zip
 }
-
 
 # Display usage information for this tool.
 displayHelp() {

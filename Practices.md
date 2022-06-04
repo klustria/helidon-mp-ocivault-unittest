@@ -7,9 +7,7 @@ included practices, the goal is for you to understand how to create a unit test 
 `test double` is a generic term used for cases where some production objects, usually those that represent external 
 dependencies, are replaced with simplified versions that simulate and behave like its production equivalent. By reducing
 complexity on those external dependencies in the form of `test doubles`, this allows code to be verified independently
-from them and at the same time, test the system's interaction with them.
-
-In this project, our external dependency is the OCI Vault service interaction used for creating and retrieving secrets.
+from them and at the same time, test the system's interaction with them. In this project, our external dependency is the OCI Vault service interaction used for creating and retrieving secrets.
 To simplify testing, we will use `test doubles` to replace the production implementation of the OCI Vault integration 
 using the following `test double` approaches:
 
@@ -41,9 +39,9 @@ directly accessible from the unit test and allow stubbing directives to define t
 * A basic knowledge on how to use java OCI SDK
 
 ## Practice 1. Create Unit Test using @HelidonTest and Fake Objects
-1. Set up the project by unzipping the distribution [helidon-mp-oci-unittest-practice.zip](helidon-mp-oci-unittest-practice.zip) to any directory of your choice.
+1. Set up the project by unzipping the distribution [helidon-mp-ocivault-unittest-practice.zip](helidon-mp-ocivault-unittest-practice.zip) to any directory of your choice.
       ```bash
-      unzip helidon-mp-oci-unittest-practice.zip
+      unzip helidon-mp-ocivault-unittest-practice.zip
       ```
 2. Open the project in IntelliJ.
    1. If no projects are active in the IDE, use `Open` button from the Welcome screen and choose the directory of the project.
@@ -67,7 +65,7 @@ directly accessible from the unit test and allow stubbing directives to define t
        ```
    3. Open the Maven tool window by clicking `Maven` on the right sidebar of the IDE and choose the toolbar button with arrow cycle icon. Clicking this button will reload the Maven projects that includes the newly added dependencies. 
 4. Create the test package directory by doing the following:
-   1. While highlighting the project root directory from `Project` tool window, i.e. `helidon-mp-oci-unittest-practice`, use `File->New->Directory` from the menu bar and select `src/test/java` under `Maven Source Directories` on the `New Directory` pop-up window.
+   1. While highlighting the project root directory from `Project` tool window, i.e. `helidon-mp-ocivault-unittest-practice`, use `File->New->Directory` from the menu bar and select `src/test/java` under `Maven Source Directories` on the `New Directory` pop-up window.
    2. From the `Project` tool window, highlight the newly created `java` directory under `src/test` then use `File->New->Package` from the menu bar and enter `io.heldon.unittest`. Under the covers, this will create `io/helidon/unittest` directory.
 5. Create a helper class called `FakeSecretsData`. The objective of this class is to be able to provide help in performing OCI secrets create and get calls by being able to simulate access to secrets information from memory through a local Map or String Constant, rather than from the actual OCI cloud service.
    1. From the `Project` tool window, highlight the newly created package `io.heldon.unittest` (or `io/helidon/unittest` path) under `src/test/java`and use `File->New->Java Class` to enter `FakeSecretsData` which will then create `public class FakeSecretsData`. The class only needs package visibility scope so remove the `public` keyword from the class declaration. 
@@ -431,4 +429,4 @@ directly accessible from the unit test and allow stubbing directives to define t
 13. Congratulations! You have successfully completed Practice 2.
 
 ## Miscellaneous
-The distribution [helidon-mp-oci-unittest-complete.zip](helidon-mp-oci-unittest-complete.zip) contains the complete project setup that has the application source code and includes the full unit test. Use this to compare your work after you have completed all the exercises.
+The distribution [helidon-mp-ocivault-unittest-complete.zip](helidon-mp-ocivault-unittest-complete.zip) contains the complete project setup that has the application source code and includes the full unit test. Use this to compare your work after you have completed all the exercises.

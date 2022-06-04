@@ -84,7 +84,7 @@ class CdiBeanFakeTest {
     }
 
     @Test
-    void testUsernameAndPassword() {
+    void testGetUsernameAndPassword() {
         String secretKey = "username";
         String response = webTarget
                 .path("secret/" + secretKey)
@@ -101,7 +101,7 @@ class CdiBeanFakeTest {
     }
 
     @Test
-    void testUnknownSecret() {
+    void testGetUnknownSecret() {
         String secretKey = "unknown";
         boolean callFailed = false;
         try {

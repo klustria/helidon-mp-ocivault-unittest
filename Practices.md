@@ -89,7 +89,7 @@ directly accessible from the unit test and allow stubbing directives to define t
       }
       ```
    5. Resolve all symbols that are in red indicating that they are currently unresolved symbols:
-      1. Hover the mouse cursor over `Map` and click `Import class` from the tooltip pop-up and select `java.util` if presented with multiple choices. 
+      1. Hover the mouse cursor over `Map` and click `Import class` from the tooltip pop-up and select `java.util` if presented with multiple choices. This will automatically generate corresponding import statement.
       2. Do the same for `Base64Value` and select `io.helidon.common` if presented with multiple choices.
       3. If having difficulty with above steps, you can also just manually add these import statements right after the package declaration (*Note: As much as possible, arrange the imports in alphabtical order and group them based on package name*):
          ```java

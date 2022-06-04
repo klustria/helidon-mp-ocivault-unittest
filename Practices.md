@@ -343,8 +343,8 @@ directly accessible from the unit test and allow stubbing directives to define t
    2. Perform successive mouse cursor hovers over `SecretsResource` and `SecretsProvider` and click on `Import class`. Choose `io.helidon.ocivault.unittest` if presented with multiple choices. This will automatically generate corresponding import statements.
    3. If having difficulty with prior step, manually add these import statements (*Note: As much as possible, arrange the imports in alphabetical order and group them based on package name*):
       ```java
-      import io.helidon.unittest.SecretsProvider;
-      import io.helidon.unittest.SecretsResource;
+      import io.helidon.ocivault.unittest.SecretsProvider;
+      import io.helidon.ocivault.unittest.SecretsResource;
       ```
 8. It is time to write our first test method that would exercise create secret call. 
    1. Add a junit test that instantiates `SecretsResource` via `getSecretsResource()` and calls `createSecret()` on it, passing in secret name and value as parameters. The result of this call will be asserted to match `FakeSecretsData.CREATE_SECRET_ID`.  Copy below code snippet and place right after the `setUp()` method:
@@ -394,7 +394,7 @@ directly accessible from the unit test and allow stubbing directives to define t
       import com.oracle.bmc.secrets.requests.GetSecretBundleByNameRequest;
       import com.oracle.bmc.secrets.responses.GetSecretBundleByNameResponse;
    
-      import static method org.mockito.Mockito.doAnswer;
+      import static org.mockito.Mockito.doAnswer;
       ```
 10. Now we are ready to add another test method that would simulate get secrets.
     1. Add a test that  retrieves `username` and `password` secretKeys using `SecretsResource.getSecret()` and asserting result to match corresponding values retrieved through `FakeSecretsData.getDecodedValue()`. Copy below code snippet and place it after `testCreateSecret()` method:

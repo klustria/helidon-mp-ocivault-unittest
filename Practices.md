@@ -23,7 +23,7 @@ using the following `test double` approaches:
 2. Mocking/stubbing using `Mockito` - for this approach, we will rely on Mockito as a mocking framework which internally
 uses java reflection to achieve this goal. Specific to this tutorial, we will only use these Mockito components:
    * `mock(Sample.class)` - creates a mock object of a specified class or an interface that will be used by a Mockito 
-   directive to specify the specific method to stub.
+   directive to specify the method to stub.
    * `when(...).thenReturn(...)` - is a directive used to return a particular hardcoded value whenever we invoke a 
    specific method on a mock object.
    * `doAnswer(...).when(...)` - is a directive used when we need to do some additional logic (for example, return 

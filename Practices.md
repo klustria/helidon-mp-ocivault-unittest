@@ -221,7 +221,7 @@ directly accessible from the unit test and allow stubbing directives to define t
     @AddBean(CdiBeanFakeTest.FakeSecretsBean.class)
     ```
 13. Now we are ready to add another test method that will exercise the JaxRS resource that retrieves secrets via `SecretsResource.getSecret()`.
-    1. Use the injected `webTarget` object to make 2 http requests that use get method on `secret/{SecretName}` path. `{SecretName}` on the path will be replaced with `username` and `password` and response should match corresponding values retrieved from `FakeSecretsData.getDecodedValue()`. Place this code snippet right after the `testCreateSecret()` method:
+    1. Use the injected `webTarget` object to make 2 http requests that use get method on `secret/{SecretName}` path. `{SecretName}` on the path will be replaced with `username` and `password` and responses should match corresponding values retrieved from `FakeSecretsData.getDecodedValue()`. Place this code snippet right after the `testCreateSecret()` method:
        ```java
        @Test
        void testGetUsernameAndPassword() {
@@ -240,9 +240,9 @@ directly accessible from the unit test and allow stubbing directives to define t
            Assertions.assertEquals(FakeSecretsData.getDecodedValue(secretKey), response);
        }
        ```
-    2. Validate the test by clicking on the green arrow head on the left side of the `testGetUsernameAndPassword()` method declaration and choose `Run 'testGetUnknownSecret()'`. Expect the test result to be successful.
+    2. Validate the test by clicking on the green arrow head on the left side of the `testGetUsernameAndPassword()` method declaration and choose `Run 'testGetUsernameAndPassword()'`. Expect the test result to be successful.
 14. Our final test method will implement a negative scenario that would replicate a failure case where a non-existent secret is being retrieved.
-    1. Use the injected `webTarget` object to make an http requests that use get method on `secret/unknown` path. The `unknown` part on the path represents the secret name and hence should result to failure. Place this code snippet right after the `testGetUsernameAndPassword()` method:
+    1. Use the injected `webTarget` object to make an http requests that use get method on `secret/unknown` path. The `unknown` part on the path represents the name of a secret that does not exist and hence should result to a failure. Place this code snippet right after the `testGetUsernameAndPassword()` method:
        ```java
        @Test
        void testGetUnknownSecret() {
@@ -385,7 +385,7 @@ directly accessible from the unit test and allow stubbing directives to define t
                   .build();
       }).when(SECRETS_CLIENT).getSecretBundleByName(any());
       ```
-   7. Hover mouse cursor over `doAnswer` and click on `Import static method 'org.mockito.doAnswer'`. This will automatically generate corresponding import statement.
+   7. Hover mouse cursor over `doAnswer` and click on `Import static method 'org.mockito.Mockito.doAnswer'`. This will automatically generate corresponding import statement.
    8. Perform successive mouse cursor hovers over `GetSecretBundleByNameRequest`, `GetSecretBundleByNameResponse`, `SecretBundle` and `Base64SecretBundleContentDetails` and click on `Import class`. This will automatically generate corresponding import statements.
    9. If having difficulties with prior steps for automatic import resolution, manually add these import statements instead (*Note: As much as possible, arrange the imports in alphabetical order and group them based on package name*):
       ```java

@@ -175,10 +175,7 @@ directly accessible from the unit test and allow stubbing directives to define t
        import javax.ws.rs.client.Entity;
        import javax.ws.rs.core.Response;
        ```
-    7. Run the test by doing either of the following:
-        1. Right-click on `CdiBeanFakeTest` found on the `Project` tool window and choose `Run 'CdiBeanFakeTest'` from the drop-down menu.
-        2. Click on the right pointing green arrow head on the left side of the `class CdiBeanFakeTest` declaration and choose `Run 'CdiBeanFakeTest'`
-    8. The test will begin execution and test result, particularly that of `testCreateSecret()` should show that it has completed successfully.
+    7. Validate the test by clicking on the green arrow head on the left side of the `testCreateSecret()` method declaration and choose `Run 'testCreateSecret()'`. Expect the test result to be successful.
 11. Next, add an inner class that simulates a `SecretsClient` performing a `getSecretBundleByName()` call:
     1. Add a new static class called `FakeSecretsBean` that implements `Secrets` interface as an internal class in `CdiBeanFakeTest` and place it right after `FakeVaultsBean` inner class. 
        ```java
@@ -224,7 +221,7 @@ directly accessible from the unit test and allow stubbing directives to define t
     @AddBean(CdiBeanFakeTest.FakeSecretsBean.class)
     ```
 13. Now we are ready to add another test method that will exercise the JaxRS resource that retrieves secrets via `SecretsResource.getSecret()`.
-    1. Use the injected `webTarget` object to make 2 http requests that use get method on `secret/{SecretName}` path. `{SecretName}` on the path will be replaced with `username` and `password`. Place this code snippet right after the `testCreateSecret()` method:
+    1. Use the injected `webTarget` object to make 2 http requests that use get method on `secret/{SecretName}` path. `{SecretName}` on the path will be replaced with `username` and `password` and response should match corresponding values retrieved from `FakeSecretsData.getDecodedValue()`. Place this code snippet right after the `testCreateSecret()` method:
        ```java
        @Test
        void testGetUsernameAndPassword() {
@@ -243,10 +240,7 @@ directly accessible from the unit test and allow stubbing directives to define t
            Assertions.assertEquals(FakeSecretsData.getDecodedValue(secretKey), response);
        }
        ```
-    2. Run the test by doing either of the following:
-        1. Right-click on `CdiBeanFakeTest` found on the `Project` window tool and choose `Run 'CdiBeanFakeTest'` from the drop-down menu.
-        2. Click on the green arrow head on the left side of the `class CdiBeanFakeTest` declaration and choose `Run 'CdiBeanFakeTest'`
-    3. The test will begin execution and all test results, particularly that of `testCreateSecret()` and `testGetUsernameAndPassword()` should show that they had completed successfully.
+    2. Validate the test by clicking on the green arrow head on the left side of the `testGetUsernameAndPassword()` method declaration and choose `Run 'testGetUnknownSecret()'`. Expect the test result to be successful.
 14. Our final test method will implement a negative scenario that would replicate a failure case where a non-existent secret is being retrieved.
     1. Use the injected `webTarget` object to make an http requests that use get method on `secret/unknown` path. The `unknown` part on the path represents the secret name and hence should result to failure. Place this code snippet right after the `testGetUsernameAndPassword()` method:
        ```java
@@ -265,11 +259,11 @@ directly accessible from the unit test and allow stubbing directives to define t
            Assertions.assertTrue(callFailed, "Expecting a failure on the getSecret() call");
        }
        ```
-    2. Run the test by doing either of the following:
-       1. Right-click on `CdiBeanFakeTest` found on the `Project` window tool and choose `Run 'CdiBeanFakeTest'` from the drop-down menu.
-       2. Click on the green arrow head on the left side of the `class CdiBeanFakeTest` declaration and choose `Run 'CdiBeanFakeTest'` 
-    3. The test will begin execution and all test results, particularly that of `testCreateSecret()`, `testGetUsernameAndPassword()` and `testGetUnknownSecret()` should show that they had completed successfully.
- 15. Congratulations! You have successfully completed Practice 1.
+    2. Validate the test by clicking on the green arrow head on the left side of the `testGetUnknownSecret()` method declaration and choose `Run 'testGetUnknownSecret()'`. Expect the test result to be successful.
+15. Finally, run the entire test class by doing either of the steps mentioned below and expect all test results to be successful:
+    * Right-click on `CdiBeanFakeTest` found on the `Project` window tool and choose `Run 'CdiBeanFakeTest'` from the drop-down menu.
+    * Click on the green arrow head on the left side of the `class CdiBeanFakeTest` declaration and choose `Run 'CdiBeanFakeTest'`
+16. Congratulations! You have successfully completed Practice 1.
     
 ## Practice 2. Create Unit Test using Mockito
 1. This exercise assumes that you have completed `Practice 1` as it requires some components that had already been created in that exercise. If this is not the case, ensure that you have performed steps 1 through 5 of `Practice 1` at a minimum to be able to continue.
@@ -367,10 +361,7 @@ directly accessible from the unit test and allow stubbing directives to define t
    
       import org.junit.jupiter.api.Test;
       ```
-   4. Run the test by doing either of the following:
-       1. Right-click on `MockitoMockTest` found on the `Project` tool window and choose `Run 'MockitoMockTest'` from the drop-down menu.
-       2. Click on the green arrow head on the left side of the `class MockitoMockTest` declaration and choose `Run 'MockitoMockTest'`
-   5. The test will begin execution and test result, particularly that of `testCreateSecret()` should show that it has completed successfully.
+   4. Validate the test by clicking on the green arrow head on the left side of the `testCreateSecret()` method declaration and choose `Run 'testCreateSecret()'`. Expect the test result to be successful.
 9. Inside `setUp()` method, add code to stub `Secrets.getSecretBundleByName()` using mockito's `doAnswer()` directive. The stubbing code will have the following sequence:
    1. Retrieve `GetSecretBundleByNameRequest` object which is passed as a parameter from `SECRETS_CLIENT.getSecretBundleByName()`.
    2. Get the secret key value from `GetSecretBundleByNameRequest`.
@@ -406,7 +397,7 @@ directly accessible from the unit test and allow stubbing directives to define t
       import static method org.mockito.Mockito.doAnswer;
       ```
 10. Now we are ready to add another test method that would simulate get secrets.
-    1. Add a test that  retrieves `username` and `password` secretKeys using `SecretsResource.getSecret()` and asserting result to match corresponding value retrieved through `FakeSecretsData.getDecodedValue()`. Copy below code snippet and place it after `testCreateSecret()` method:
+    1. Add a test that  retrieves `username` and `password` secretKeys using `SecretsResource.getSecret()` and asserting result to match corresponding values retrieved through `FakeSecretsData.getDecodedValue()`. Copy below code snippet and place it after `testCreateSecret()` method:
        ```java
        @Test
        void testGetUsernameAndPassword() {
@@ -417,10 +408,7 @@ directly accessible from the unit test and allow stubbing directives to define t
            Assertions.assertEquals(FakeSecretsData.getDecodedValue(secretKey), secretsResource.getSecret(secretKey));
        }
        ```
-    2. Run the test by doing either of the following:
-        1. Right-click on `MockitoMockTest` found on the `Project` tool window and choosing `Run 'MockitoMockTest'` from the drop-down menu.
-        2. Click on the green arrow head on the left side of the `class MockitoMockTest` declaration and choose `Run 'MockitoMockTest'`
-    3. The test will begin execution and all test results, particularly that of `testCreateSecret()` and `testGetUsernameAndPassword()` should show that they had completed successfully.
+    2. Validate the test by clicking on the green arrow head on the left side of the `testGetUsernameAndPassword()` method declaration and choose `Run 'testGetUsernameAndPassword()'`. Expect the test result to be successful.
 11. Implement a negative junit test method for get secret.
     1. Create a test that simulates a failure scenario where a non-existent secret is being retrieved. The test will only succeed if the call to `secretsResource.getSecret("Unknown")` throws an exception indicating that the secret was not found. Copy below code snippet and place it after `testGetUsernameAndPassword()` method:
        ```java
@@ -436,10 +424,10 @@ directly accessible from the unit test and allow stubbing directives to define t
            Assertions.assertTrue(callFailed, "Expecting a failure on the getSecret() call");
        }
        ```
-    2. Run the test by doing either of the following:
-        1. Right-click on `MockitoMockTest` found on the `Project` tool window and choosing `Run 'MockitoMockTest'` from the drop-down menu.
-        2. Click on the green arrow head on the left side of the `class MockitoMockTest` declaration and choose `Run 'MockitoMockTest'`
-    3. The test will begin execution and all test results, particularly that of `testCreateSecret()`, `testGetUsernameAndPassword()` and `testGetUnknownSecret()` should show that they had completed successfully.
+    2. Validate the test by clicking on the green arrow head on the left side of the `testGetUsernameAndPassword()` method declaration and choose `Run 'testGetUsernameAndPassword()'`. Expect the test result to be successful.
+12. Finally, run the entire test class by doing either of the steps mentioned below and expect all test results to be successful:
+    * Right-click on `MockitoMockTest` found on the `Project` tool window and choosing `Run 'MockitoMockTest'` from the drop-down menu.
+    * Click on the green arrow head on the left side of the `class MockitoMockTest` declaration and choose `Run 'MockitoMockTest'`
 13. Congratulations! You have successfully completed Practice 2.
 
 ## Miscellaneous

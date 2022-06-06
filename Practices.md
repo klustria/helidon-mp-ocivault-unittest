@@ -11,15 +11,16 @@ from them and at the same time, test the system's interaction with them. In this
 To simplify testing, we will use `test doubles` to replace the production implementation of the OCI Vault integration 
 using the following `test double` approaches:
 
-1. Fake objects with `HelidonTest` - for this approach, we will be using various components of HelidonTest:
+1. Fake objects with `HelidonTest` - Allows a CDI bean to be replaced with a fake implementation. For this approach, 
+   we will be using various components of HelidonTest:
    * `@HelidonTest` - a class level annotation that will cause the test extension to start a Helidon microprofile server 
    for you, so that you do not need to manage the server lifecycle in your test.
    * `@AddBean(Sample.class)` - a class level annotation that loads the provided class as a CDI bean into a Helidon 
    container and effectively replacing the production version of the bean.
    * `WebTarget` - an injectable object that can be used as the http interface to invoke the server endpoint started 
    by `@HelidonTest`
-2. Mocking/stubbing using `Mockito` - for this approach, we will rely on Mockito as a mocking framework which internally
-uses java reflection to achieve this goal. Specific to this tutorial, we will only use these Mockito components:
+2. Mocking/stubbing using `Mockito` - Allows a class or interface to be mocked using java reflection. Specific to this 
+   tutorial, we will only use a subset of Mockito components:
    * `mock(Sample.class)` - creates a mock object of a specified class or an interface that will be used by a Mockito 
    directive to specify the method to stub.
    * `when(...).thenReturn(...)` - is a directive used to return a particular hardcoded value whenever we invoke a 
